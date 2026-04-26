@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEARSTAGE — Official Website</title>
+<meta name="description" content="DEARSTAGE Inc. オフィシャルサイト。でんぱ組.inc / 虹のコンキスタドール / MEME TOKYO / ARCANA PROJECT ほか所属アーティスト最新情報。">
+<meta property="og:title" content="DEARSTAGE — Official Website">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="is-loading">
+
+<!-- ============================ SPLASH SCREEN ============================ -->
+<div class="splash" id="splash" aria-hidden="false">
+  <div class="splash__noise" aria-hidden="true"></div>
+  <div class="splash__tape splash__tape--1" aria-hidden="true">
+    <span class="tape-text" data-text="DEARSTAGE · DEARSTAGE · DEARSTAGE · DEARSTAGE · DEARSTAGE · DEARSTAGE · "></span>
+  </div>
+  <div class="splash__tape splash__tape--2" aria-hidden="true">
+    <span class="tape-text outline" data-text="WELCOME · WELCOME · WELCOME · WELCOME · WELCOME · WELCOME · "></span>
+  </div>
+
+  <div class="splash__center">
+    <div class="splash__kicker" data-i18n="splash.tag">WELCOME TO</div>
+    <div class="splash__brand">
+      <span class="b" style="--d:.05s">D</span>
+      <span class="b" style="--d:.10s">E</span>
+      <span class="b" style="--d:.15s">A</span>
+      <span class="b" style="--d:.20s">R</span>
+      <span class="b spc">·</span>
+      <span class="b" style="--d:.30s">S</span>
+      <span class="b" style="--d:.35s">T</span>
+      <span class="b" style="--d:.40s">A</span>
+      <span class="b" style="--d:.45s">G</span>
+      <span class="b" style="--d:.50s">E</span>
+    </div>
+    <div class="splash__sub" data-i18n="splash.sub">アイドル / アーティストの未来をつくる</div>
+    <div class="splash__bar"><span></span></div>
+  </div>
+
+  <button class="splash__skip" id="splashSkip" type="button">SKIP →</button>
+</div>
+
+<!-- ============================ NOISE TEXTURE LAYER ============================ -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============================ HEADER ============================ -->
+<header class="hd" id="hd">
+  <a href="#top" class="hd__logo" aria-label="DEARSTAGE">
+    <span class="hd__logo-mark"><span></span><span></span><span></span></span>
+  </a>
+
+  <nav class="hd__nav">
+    <a href="#news" data-i18n="nav.news">NEWS</a>
+    <a href="#schedule" data-i18n="nav.schedule">SCHEDULE</a>
+    <a href="#artist" data-i18n="nav.artist">ARTIST</a>
+    <a href="#company" data-i18n="nav.company">COMPANY</a>
+    <a href="#contact" data-i18n="nav.contact">CONTACT</a>
+  </nav>
+
+  <div class="hd__right">
+    <div class="lang" id="lang">
+      <button type="button" class="lang__btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
+        <span class="lang__dot"></span>
+        <span class="lang__cur" id="langCur">JP</span>
+        <span class="lang__chev">▾</span>
+      </button>
+      <ul class="lang__menu" role="listbox" id="langMenu">
+        <li role="option" data-lang="jp">日本語</li>
+        <li role="option" data-lang="en">English</li>
+      </ul>
+    </div>
+    <button class="hd__burger" id="burger" aria-label="menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="top">
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__yt" id="heroYt"></div>
+    <div class="hero__veil"></div>
+  </div>
+
+  <div class="hero__inner">
+    <div class="hero__cta">
+      <a href="#news" class="btn btn--primary"><span data-i18n="hero.cta_news">最新ニュース</span><i>→</i></a>
+      <a href="#schedule" class="btn btn--ghost"><span data-i18n="hero.cta_schedule">スケジュール</span><i>→</i></a>
+
+      <a href="#artist" class="spinbtn" aria-label="Jump to Artist">
+        <svg viewBox="0 0 200 200" class="spinbtn__ring">
+          <defs>
+            <path id="spinPath" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"/>
+          </defs>
+          <text class="spinbtn__txt"><textPath href="#spinPath" startOffset="0">ARTIST · SCROLL · ARTIST · SCROLL · ARTIST · SCROLL · </textPath></text>
+        </svg>
+        <span class="spinbtn__core">▼</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__marquee" aria-hidden="true">
+    <div class="hero__marquee-track" id="heroMarquee"></div>
+  </div>
+</section>
+
+<!-- ============================ TAPES (avex-style diagonal cross) ============================ -->
+<div class="tapes" aria-hidden="true">
+  <div class="tape tape--black tape--down">
+    <div class="tape__track" id="tapeBlack"></div>
+  </div>
+  <div class="tape tape--pink tape--up">
+    <div class="tape__track" id="tapePink"></div>
+  </div>
+</div>
+
+<!-- ============================ NEWS ============================ -->
+<section class="sec sec--news" id="news">
+  <div class="ribbon ribbon--pink" aria-hidden="true">
+    <svg viewBox="0 0 1600 220" preserveAspectRatio="none">
+      <defs>
+        <path id="rb-news" d="M0,150 C 250,30 600,260 900,110 S 1500,40 1600,130"/>
+      </defs>
+      <use href="#rb-news" class="ribbon__path"/>
+      <text class="ribbon__txt"><textPath href="#rb-news" startOffset="0">News · News · News · News · News · News · News · News · News · News · News · News · News · News · News · </textPath></text>
+    </svg>
+  </div>
+
+  <div class="sec__head">
+    <h2 class="sec__title sec__title--vert">News</h2>
+    <p class="sec__lead" data-i18n="sections.news.lead"></p>
+  </div>
+
+  <div class="news-grid" id="newsGrid"></div>
+
+  <a href="#" class="sec__more"><span data-i18n="common.viewAll">すべて見る</span> <i>→</i></a>
+</section>
+
+<!-- ============================ SCHEDULE ============================ -->
+<section class="sec sec--schedule" id="schedule">
+  <div class="ribbon ribbon--purple" aria-hidden="true">
+    <svg viewBox="0 0 1600 220" preserveAspectRatio="none">
+      <defs>
+        <path id="rb-sch" d="M0,80 C 300,260 700,30 1000,150 S 1500,210 1600,90"/>
+      </defs>
+      <use href="#rb-sch" class="ribbon__path"/>
+      <text class="ribbon__txt"><textPath href="#rb-sch" startOffset="0">Schedule · Schedule · Schedule · Schedule · Schedule · Schedule · Schedule · Schedule · Schedule · </textPath></text>
+    </svg>
+  </div>
+
+  <div class="sec__head">
+    <h2 class="sec__title sec__title--vert">Schedule</h2>
+    <p class="sec__lead" data-i18n="sections.schedule.lead"></p>
+  </div>
+
+  <!-- Hello! Project-style search/filter system -->
+  <div class="sch-search">
+
+    <!-- Top row: month navigation + today + view toggle + search -->
+    <div class="sch-search__top">
+      <div class="sch-monthnav">
+        <button type="button" id="schPrev" aria-label="prev month">‹</button>
+        <div class="sch-monthnav__cur">
+          <span class="y" id="schYear">2026</span>.<span class="m" id="schMonth">05</span>
+        </div>
+        <button type="button" id="schNext" aria-label="next month">›</button>
+        <button type="button" id="schToday" class="sch-today" data-i18n="schedule.today">TODAY</button>
+      </div>
+
+      <div class="sch-search__view">
+        <button type="button" class="sch-view is-active" data-view="list" data-i18n="schedule.viewList">LIST</button>
+        <button type="button" class="sch-view"           data-view="cal"  data-i18n="schedule.viewCal">CALENDAR</button>
+      </div>
+
+      <div class="sch-keyword">
+        <span class="sch-keyword__ic">⌕</span>
+        <input type="search" id="schKeyword" placeholder="Search…" aria-label="keyword">
+      </div>
+    </div>
+
+    <!-- Tag checkboxes (multi-select, helloproject style) -->
+    <div class="sch-tags">
+      <span class="sch-tags__label" data-i18n="schedule.tagsLabel">CATEGORY</span>
+      <div class="sch-tags__list" id="schTags"></div>
+      <button type="button" class="sch-tags__all" id="schTagsAll" data-i18n="schedule.checkAll">ALL</button>
+      <button type="button" class="sch-tags__none" id="schTagsNone" data-i18n="schedule.uncheckAll">CLEAR</button>
+    </div>
+
+    <!-- Artist filter (multi-select dropdown) -->
+    <div class="sch-artist">
+      <span class="sch-artist__label" data-i18n="schedule.artistLabel">ARTIST</span>
+      <details class="sch-artist__menu" id="schArtistMenu">
+        <summary>
+          <span id="schArtistSummary" data-i18n="schedule.artistAll">ALL ARTISTS</span>
+          <span class="chev">▾</span>
+        </summary>
+        <div class="sch-artist__list" id="schArtistList"></div>
+      </details>
+    </div>
+
+    <!-- Active filter summary chip bar -->
+    <div class="sch-summary">
+      <span class="sch-summary__count" id="schCount">0</span>
+      <span data-i18n="schedule.results">件</span>
+      <button type="button" id="schReset" class="sch-summary__reset" data-i18n="schedule.reset">RESET</button>
+    </div>
+
+  </div>
+
+  <!-- Calendar view (hidden by default) -->
+  <div class="sch-cal" id="schCal" hidden></div>
+
+  <!-- Results -->
+  <div class="sch-list" id="schList"></div>
+</section>
+
+<!-- ============================ TAPES (avex-style diagonal cross) ============================ -->
+<div class="tapes" aria-hidden="true">
+  <div class="tape tape--pink tape--down">
+    <div class="tape__track" id="tapePink2"></div>
+  </div>
+  <div class="tape tape--black tape--up">
+    <div class="tape__track" id="tapeBlack2"></div>
+  </div>
+</div>
+
+<!-- ============================ ARTIST ============================ -->
+<section class="sec sec--artist" id="artist">
+  <div class="ribbon ribbon--yellow" aria-hidden="true">
+    <svg viewBox="0 0 1600 220" preserveAspectRatio="none">
+      <defs>
+        <path id="rb-art" d="M0,120 C 200,200 600,40 900,150 S 1400,80 1600,160"/>
+      </defs>
+      <use href="#rb-art" class="ribbon__path"/>
+      <text class="ribbon__txt"><textPath href="#rb-art" startOffset="0">Artist · Artist · Artist · Artist · Artist · Artist · Artist · Artist · Artist · Artist · Artist · </textPath></text>
+    </svg>
+  </div>
+
+  <div class="sec__head">
+    <h2 class="sec__title sec__title--vert">Artist</h2>
+    <p class="sec__lead" data-i18n="sections.artist.lead"></p>
+  </div>
+
+  <div class="artist-grid" id="artistGrid"></div>
+</section>
+
+<!-- ============================ COMPANY ============================ -->
+<section class="sec sec--company" id="company">
+  <div class="ribbon ribbon--pink" aria-hidden="true">
+    <svg viewBox="0 0 1600 220" preserveAspectRatio="none">
+      <defs>
+        <path id="rb-com" d="M0,90 C 300,40 700,200 1000,90 S 1500,170 1600,80"/>
+      </defs>
+      <use href="#rb-com" class="ribbon__path"/>
+      <text class="ribbon__txt"><textPath href="#rb-com" startOffset="0">Company · Company · Company · Company · Company · Company · Company · Company · </textPath></text>
+    </svg>
+  </div>
+
+  <div class="sec__head">
+    <h2 class="sec__title sec__title--vert">Company</h2>
+    <p class="sec__lead" data-i18n="sections.company.lead"></p>
+  </div>
+
+  <div class="company">
+    <div class="blob blob--big">
+      <dl class="company__list" id="companyList"></dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="ft" id="contact">
+  <div class="ft__top">
+    <div class="ft__brand">
+      <div class="ft__logo">DEARSTAGE</div>
+      <p class="ft__tag">© DEARSTAGE Inc.</p>
+    </div>
+
+    <nav class="ft__nav">
+      <a href="#news">NEWS</a>
+      <a href="#schedule">SCHEDULE</a>
+      <a href="#artist">ARTIST</a>
+      <a href="#company">COMPANY</a>
+    </nav>
+
+    <div class="ft__sns" id="ftSns"></div>
+  </div>
+
+  <div class="ft__big" aria-hidden="true">DEARSTAGE</div>
+  <div class="ft__copy">© <span id="yr"></span> DEARSTAGE Inc. — All rights reserved.</div>
+</footer>
+
+<!-- ============================ FLOATING LANG (mobile) ============================ -->
+<button class="float-lang" id="floatLang" aria-label="language">
+  <svg viewBox="0 0 100 100"><defs><path id="flPath" d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"/></defs><text><textPath href="#flPath" startOffset="0">LANGUAGE · 言語 · LANGUAGE · 言語 · </textPath></text></svg>
+  <span class="float-lang__cur" id="floatLangCur">JP</span>
+</button>
+
+<script src="./js/data.js"></script>
+<script src="./js/i18n.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

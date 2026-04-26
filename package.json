@@ -1,0 +1,11 @@
+{
+  "name": "dearstage-renewal",
+  "version": "0.1.0",
+  "description": "DEARSTAGE official site renewal — static site with password gate",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "python3 -m http.server 5173"
+  }
+}
