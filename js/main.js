@@ -119,6 +119,27 @@
     }
   }
 
+  /* ---------- ribbon: SVG draw-in stroke + observer ---------- */
+  function setupRibbonDraw(){
+    const ribbons = $$(".ribbon");
+    ribbons.forEach(rb => {
+      const p = rb.querySelector("svg defs path");
+      let len = 3000;
+      try { if (p && typeof p.getTotalLength === "function") len = Math.ceil(p.getTotalLength()); }
+      catch(_){}
+      rb.style.setProperty("--rb-len", len);
+    });
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting){
+          en.target.classList.add("is-in");
+          io.unobserve(en.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+    ribbons.forEach(rb => io.observe(rb));
+  }
+
   /* ---------- ribbon textPath flow ---------- */
   function startRibbonFlow(){
     const tps = document.querySelectorAll(".ribbon__txt textPath");
@@ -167,6 +188,51 @@
     buildTape("tapePink",   ["Play List", "DEARSTAGE", "Let's Check It Out", "WEBSITE"]);
     buildTape("tapePink2",  ["Schedule", "Live & Event", "Don't Miss", "DSPM"]);
     buildTape("tapeBlack2", ["Artist Roster", "DEARSTAGE", "Since 2011", "TOKYO"]);
+
+    // Hero diagonal strip
+    const heroStrip = $("#heroStrip");
+    if (heroStrip){
+      const items = ["Welcome to DEARSTAGE", "★", "Let's Check It Out", "♪", "Play List", "✺", "Idol × Culture", "★"];
+      heroStrip.innerHTML = items.map((s,i) => i%2===0
+        ? `<span class="${i%4===0 ? '' : 'out'}">${s}</span>`
+        : `<span class="ic">${s}</span>`
+      ).join("").repeat(6);
+    }
+  }
+
+  /* ---------- hero strip "rip" effect (after 10s) ---------- */
+  function setupHeroStripTear(){
+    const strip = $(".hero__strip");
+    if (!strip) return;
+    // Build top + bottom halves: clone the strip and overlay them, then animate apart
+    const top = strip.cloneNode(true);
+    top.classList.add("hero__strip--top");
+    const bot = strip; // original becomes the bottom half
+    bot.classList.add("hero__strip--bot");
+    bot.parentNode.insertBefore(top, bot);
+
+    // After 10s, kick off the tear-and-fly-apart animation
+    setTimeout(() => {
+      top.classList.add("is-tearing");
+      bot.classList.add("is-tearing");
+      // After fly-off, remove from DOM
+      setTimeout(() => { top.remove(); bot.remove(); }, 1400);
+    }, 10000);
+  }
+
+  /* ---------- hero clock ---------- */
+  function startHeroClock(){
+    const el = $("#heroLiveTime");
+    if (!el) return;
+    const tick = () => {
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mm = String(d.getMinutes()).padStart(2,"0");
+      const ss = String(d.getSeconds()).padStart(2,"0");
+      el.textContent = `${hh}:${mm}:${ss}`;
+    };
+    tick();
+    setInterval(tick, 1000);
   }
 
   /* ---------- header scroll behavior ---------- */
@@ -712,6 +778,9 @@
     applyI18n();
     mountYouTube();
     buildMarquees();
+    startHeroClock();
+    setupHeroStripTear();
+    setupRibbonDraw();
     startRibbonFlow();
     setupHeader();
     setupLang();
@@ -719,7 +788,20 @@
     setupScheduleSearch();
   }
 
+  // Run init now if DOM is parsed; also fall back to DOMContentLoaded.
+  // After document.write() (the password gate pathway), readyState is usually
+  // already "interactive"/"complete" by the time scripts run, but DOMContentLoaded
+  // does not necessarily re-fire — so we call init() directly when possible.
+  function runInit(){
+    if (window.__DS_INIT_DONE__) return;
+    window.__DS_INIT_DONE__ = true;
+    try { init(); } catch(e){ console.error("[DS] init failed:", e); }
+  }
   if (document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", init);
-  } else { init(); }
+    document.addEventListener("DOMContentLoaded", runInit);
+    // Safety net in case DOMContentLoaded never fires (post-document.write case)
+    setTimeout(runInit, 0);
+  } else {
+    runInit();
+  }
 })();

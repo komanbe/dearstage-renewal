@@ -73,6 +73,44 @@
     <div class="hero__veil"></div>
   </div>
 
+  <!-- Decorative spinning stars in corners -->
+  <div class="hero__deco hero__deco--tr" aria-hidden="true">
+    <svg viewBox="0 0 120 120">
+      <defs><path id="hd1" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+      <text style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.18em;fill:#fff">
+        <textPath href="#hd1" startOffset="0">★ DEARSTAGE · OFFICIAL · TOKYO · SINCE 2011 · </textPath>
+      </text>
+    </svg>
+    <span class="hero__deco-core">★</span>
+  </div>
+
+  <div class="hero__deco hero__deco--bl" aria-hidden="true">
+    <svg viewBox="0 0 120 120">
+      <defs><path id="hd2" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+      <text style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.18em;fill:var(--c-pink)">
+        <textPath href="#hd2" startOffset="0">✺ IDOL · CULTURE · MUSIC · LOVE · </textPath>
+      </text>
+    </svg>
+    <span class="hero__deco-core hero__deco-core--pink">✺</span>
+  </div>
+
+  <!-- Diagonal tape strip across hero -->
+  <div class="hero__strip" aria-hidden="true">
+    <span class="hero__strip-track" id="heroStrip"></span>
+  </div>
+
+  <!-- Vertical side text -->
+  <div class="hero__side" aria-hidden="true">
+    <span>● ON AIR / DEARSTAGE · TOKYO · 2026 · OFFICIAL</span>
+  </div>
+
+  <!-- Live "now" pill -->
+  <div class="hero__live" aria-hidden="true">
+    <span class="hero__live-dot"></span>
+    <span class="hero__live-txt">NOW PLAYING</span>
+    <span class="hero__live-time" id="heroLiveTime">--:--:--</span>
+  </div>
+
   <div class="hero__inner">
     <div class="hero__cta">
       <a href="#news" class="btn btn--primary"><span data-i18n="hero.cta_news">最新ニュース</span><i>→</i></a>

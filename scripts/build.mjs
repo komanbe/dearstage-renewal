@@ -32,7 +32,11 @@ const read = (p) => readFile(join(ROOT, p), "utf8");
 function inlineSrc(html, replacements){
   let out = html;
   for (const [needle, replacement] of replacements){
-    out = out.replace(needle, replacement);
+    // IMPORTANT: pass a function so the replacement string is used verbatim.
+    // Otherwise `$$`, `$&`, `$1` etc. in the replacement get interpreted as
+    // special replacement patterns by String.prototype.replace — which silently
+    // mangles JS like `const $$` into `const $` and breaks the bundle.
+    out = out.replace(needle, () => replacement);
   }
   return out;
 }
