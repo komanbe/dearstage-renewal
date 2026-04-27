@@ -72,13 +72,34 @@
     }, 6000);
   }
 
-  /* ---------- YouTube hero (with fallback) ---------- */
-  function mountYouTube(){
-    const VID = "k1-VJqwNNu4";
+  /* ---------- YouTube hero (with fallback + swap) ---------- */
+  // Hero "trailer" pool. Click the trailer button to swap to a different
+  // (random) clip. The originally-shared k1-VJqwNNu4 is the default starting
+  // video. Override via window.DS_HERO_VIDEOS.
+  const HERO_VIDEO_POOL = (window.DS_HERO_VIDEOS && window.DS_HERO_VIDEOS.length)
+    ? window.DS_HERO_VIDEOS
+    : [
+        "k1-VJqwNNu4", // originally shared
+        "fMHj3U3-RA4", // でんぱ組.inc「でんでんぱっしょ」MV
+        "bexHugfKowk", // でんぱ組.inc「プリンセスでんぱパワー！シャインオン！」MV
+        "6H2Xiw6OyOw", // でんぱ組.inc『ドキ+ワク=パレード！』Music Video
+        "ejAMVcO_kF8", // でんぱ組.inc「衝動的S/K/S/D」Music Video
+        "sOin4bwUQ5c", // でんぱ組.inc「ちゅるりちゅるりら」MV
+        "lAfPuUaSZQc"  // でんぱ組.inc テレワークMV
+      ];
+  let _heroVidIdx = 0; // start with the originally shared k1-VJqwNNu4
+
+  function _heroSetIdxBadge(){
+    const idxEl = document.getElementById("heroLiveIdx");
+    if (idxEl) idxEl.textContent = `${_heroVidIdx + 1}/${HERO_VIDEO_POOL.length}`;
+  }
+
+  function _mountIframeFor(vid){
     const slot = $("#heroYt");
     if (!slot) return;
+    slot.innerHTML = "";
+    slot.classList.remove("is-failed");
 
-    // Build a wrapper div for the iframe API
     const ph = document.createElement("div");
     ph.id = "heroYtPlayer";
     slot.appendChild(ph);
@@ -86,11 +107,11 @@
     const onAPIReady = () => {
       try {
         new YT.Player("heroYtPlayer", {
-          videoId: VID,
+          videoId: vid,
           host: "https://www.youtube.com",
           playerVars: {
             autoplay: 1, mute: 1, controls: 0, loop: 1,
-            playlist: VID, playsinline: 1, modestbranding: 1,
+            playlist: vid, playsinline: 1, modestbranding: 1,
             rel: 0, showinfo: 0, iv_load_policy: 3, disablekb: 1,
             origin: window.location.origin
           },
@@ -99,23 +120,44 @@
             onError: () => slot.classList.add("is-failed")
           }
         });
-      } catch(_) {
-        slot.classList.add("is-failed");
-      }
+      } catch(_) { slot.classList.add("is-failed"); }
     };
 
     if (window.YT && window.YT.Player){ onAPIReady(); }
     else {
       window.onYouTubeIframeAPIReady = onAPIReady;
-      const s = document.createElement("script");
-      s.src = "https://www.youtube.com/iframe_api";
-      s.async = true;
-      s.onerror = () => slot.classList.add("is-failed");
-      document.head.appendChild(s);
-      // Safety timeout — if API never loads, show fallback BG
+      if (!document.getElementById("__yt_api")){
+        const s = document.createElement("script");
+        s.id = "__yt_api";
+        s.src = "https://www.youtube.com/iframe_api";
+        s.async = true;
+        s.onerror = () => slot.classList.add("is-failed");
+        document.head.appendChild(s);
+      }
       setTimeout(() => {
         if (!slot.querySelector("iframe")) slot.classList.add("is-failed");
       }, 5000);
+    }
+  }
+
+  function mountYouTube(){
+    _heroVidIdx = 0;
+    _heroSetIdxBadge();
+    _mountIframeFor(HERO_VIDEO_POOL[_heroVidIdx]);
+
+    const btn = $("#heroNext");
+    if (btn){
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        // Pick a random other index (not the same as current)
+        let next;
+        if (HERO_VIDEO_POOL.length <= 1) return;
+        do { next = Math.floor(Math.random() * HERO_VIDEO_POOL.length); }
+        while (next === _heroVidIdx);
+        _heroVidIdx = next;
+        _heroSetIdxBadge();
+        _mountIframeFor(HERO_VIDEO_POOL[_heroVidIdx]);
+      });
     }
   }
 
@@ -788,7 +830,6 @@
     applyI18n();
     mountYouTube();
     buildMarquees();
-    startHeroClock();
     setupHeroStripTear();
     setupRibbonDraw();
     startRibbonFlow();
