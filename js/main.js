@@ -88,21 +88,61 @@
         "lAfPuUaSZQc"  // でんぱ組.inc テレワークMV
       ];
   let _heroVidIdx = 0; // start with the originally shared k1-VJqwNNu4
+  const _heroFailed = new Set(); // indices that have failed to embed
 
   function _heroSetIdxBadge(){
     const idxEl = document.getElementById("heroLiveIdx");
     if (idxEl) idxEl.textContent = `${_heroVidIdx + 1}/${HERO_VIDEO_POOL.length}`;
   }
 
-  function _mountIframeFor(vid){
+  function _heroPickNext(excludeCurrent){
+    // Random untried index. Excludes failed and (optionally) the current.
+    const candidates = HERO_VIDEO_POOL
+      .map((_,i) => i)
+      .filter(i => !_heroFailed.has(i) && (!excludeCurrent || i !== _heroVidIdx));
+    if (!candidates.length) return -1;
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  }
+
+  // YouTube IFrame API error codes that indicate the embed cannot work
+  // (we should auto-skip to the next video):
+  //   2   - bad parameter / videoId
+  //   5   - HTML5 player error
+  //   100 - video not found
+  //   101 - embedding disabled by uploader
+  //   150 - same as 101 (embedding disabled)
+  //   153 - player config / restriction error (region / domain)
+  // Any error code → treat as fatal for that videoId.
+
+  function _mountIframeFor(idx){
+    const vid = HERO_VIDEO_POOL[idx];
     const slot = $("#heroYt");
     if (!slot) return;
     slot.innerHTML = "";
     slot.classList.remove("is-failed");
+    _heroSetIdxBadge();
 
     const ph = document.createElement("div");
     ph.id = "heroYtPlayer";
     slot.appendChild(ph);
+
+    let readyFired = false;
+    let killed = false;
+
+    const handleFatal = (reason) => {
+      if (killed) return;
+      killed = true;
+      _heroFailed.add(idx);
+      const next = _heroPickNext(true);
+      if (next >= 0){
+        // Try the next pool entry — quietly.
+        _heroVidIdx = next;
+        _mountIframeFor(next);
+      } else {
+        // Exhausted — fall back to animated gradient
+        slot.classList.add("is-failed");
+      }
+    };
 
     const onAPIReady = () => {
       try {
@@ -116,11 +156,19 @@
             origin: window.location.origin
           },
           events: {
-            onReady: (e) => { try{ e.target.mute(); e.target.playVideo(); }catch(_){} },
-            onError: () => slot.classList.add("is-failed")
+            onReady: (e) => {
+              readyFired = true;
+              try{ e.target.mute(); e.target.playVideo(); }catch(_){}
+            },
+            onError: () => handleFatal("yt-error"),
+            onStateChange: (e) => {
+              // -1=unstarted, 0=ended, 1=playing, 2=paused, 3=buffering, 5=cued
+              // If the player reports "ended" almost immediately, treat as failure.
+              if (e.data === 0 && !readyFired) handleFatal("ended-without-play");
+            }
           }
         });
-      } catch(_) { slot.classList.add("is-failed"); }
+      } catch(_) { handleFatal("ctor"); }
     };
 
     if (window.YT && window.YT.Player){ onAPIReady(); }
@@ -131,32 +179,32 @@
         s.id = "__yt_api";
         s.src = "https://www.youtube.com/iframe_api";
         s.async = true;
-        s.onerror = () => slot.classList.add("is-failed");
+        s.onerror = () => handleFatal("api-load");
         document.head.appendChild(s);
       }
-      setTimeout(() => {
-        if (!slot.querySelector("iframe")) slot.classList.add("is-failed");
-      }, 5000);
     }
+
+    // Watchdog: if onReady doesn't fire in 6 seconds, treat as embed failure
+    setTimeout(() => {
+      if (!readyFired && !killed) handleFatal("watchdog-no-ready");
+    }, 6000);
   }
 
   function mountYouTube(){
     _heroVidIdx = 0;
-    _heroSetIdxBadge();
-    _mountIframeFor(HERO_VIDEO_POOL[_heroVidIdx]);
+    _heroFailed.clear();
+    _mountIframeFor(_heroVidIdx);
 
     const btn = $("#heroNext");
     if (btn){
       btn.addEventListener("click", e => {
         e.preventDefault();
-        // Pick a random other index (not the same as current)
-        let next;
         if (HERO_VIDEO_POOL.length <= 1) return;
-        do { next = Math.floor(Math.random() * HERO_VIDEO_POOL.length); }
-        while (next === _heroVidIdx);
+        // Pick a random different index, skipping known-failed ones
+        const next = _heroPickNext(true);
+        if (next < 0) return;
         _heroVidIdx = next;
-        _heroSetIdxBadge();
-        _mountIframeFor(HERO_VIDEO_POOL[_heroVidIdx]);
+        _mountIframeFor(_heroVidIdx);
       });
     }
   }
