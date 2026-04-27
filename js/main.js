@@ -304,19 +304,9 @@
   function setupHeroStripTear(){
     const strip = $(".hero__strip");
     if (!strip) return;
-    // Build top + bottom halves: clone the strip and overlay them, then animate apart
-    const top = strip.cloneNode(true);
-    top.classList.add("hero__strip--top");
-    const bot = strip; // original becomes the bottom half
-    bot.classList.add("hero__strip--bot");
-    bot.parentNode.insertBefore(top, bot);
-
-    // After 10s, kick off the tear-and-fly-apart animation
     setTimeout(() => {
-      top.classList.add("is-tearing");
-      bot.classList.add("is-tearing");
-      // After fly-off, remove from DOM
-      setTimeout(() => { top.remove(); bot.remove(); }, 1400);
+      strip.classList.add("is-tearing");
+      setTimeout(() => strip.remove(), 1300);
     }, 10000);
   }
 

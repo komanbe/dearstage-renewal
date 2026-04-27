@@ -301,11 +301,13 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
 .hd__burger{ display: none; }
 
 /* Mobile: hide the nav menu and burger entirely.
-   Users navigate by scrolling between sections. The floating lang pill stays. */
+   Users navigate by scrolling between sections. The floating lang pill stays.
+   Higher specificity to win over earlier desktop rules. */
 @media (max-width: 900px){
-  .hd__nav  { display: none !important; }
-  .hd__burger{ display: none !important; }
-  .hd__right .lang{ display: none; }   /* desktop lang button hidden too — float-lang covers it */
+  .hd .hd__nav,
+  .hd .hd__nav *  { display: none !important; }
+  .hd .hd__burger { display: none !important; }
+  .hd .hd__right .lang{ display: none !important; }
 }
 
 /* =========================================================
@@ -357,9 +359,8 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
 .hero__deco--bl{ display: none; }
 @media (max-width: 760px){ .hero__deco--tr{ width: 70px; height: 70px; top: 84px; right: 14px; } }
 
-/* Diagonal tape across hero — narrower, lower z so it doesn't fight decorations.
-   After 10s the strip is "ripped": split into two halves with a jagged tear
-   between them, each half flies off the screen rotating. */
+/* Diagonal tape across hero. After 10s the strip "rips" via a jagged
+   clip-path that contracts and the whole thing rotates+slides off. */
 .hero__strip{
   position: absolute; left: -10%; right: -10%; top: 36%;
   height: 48px;
@@ -373,30 +374,31 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
   opacity: .96;
   will-change: transform, clip-path, opacity;
 }
-.hero__strip--top{
-  clip-path: polygon(
-    0 0, 100% 0, 100% 48%,
-    95% 53%, 90% 46%, 85% 54%, 80% 47%, 75% 55%, 70% 46%, 65% 53%, 60% 47%, 55% 54%, 50% 46%,
-    45% 53%, 40% 47%, 35% 55%, 30% 46%, 25% 53%, 20% 47%, 15% 54%, 10% 46%, 5% 53%, 0 47%
-  );
-}
-.hero__strip--bot{
-  clip-path: polygon(
-    0 53%, 5% 47%, 10% 54%, 15% 46%, 20% 53%, 25% 47%, 30% 54%, 35% 45%, 40% 53%, 45% 47%, 50% 54%,
-    55% 46%, 60% 53%, 65% 47%, 70% 54%, 75% 45%, 80% 53%, 85% 46%, 90% 54%, 95% 47%,
-    100% 52%, 100% 100%, 0 100%
-  );
-}
 .hero__strip.is-tearing{
-  transition: transform 1.1s cubic-bezier(.7,.0,.3,1), opacity .9s ease .2s;
+  animation: stripRip 1.2s cubic-bezier(.7,.0,.3,1) forwards;
 }
-.hero__strip--top.is-tearing{
-  transform: rotate(-13deg) translate(-18vw, -42vh);
-  opacity: 0;
-}
-.hero__strip--bot.is-tearing{
-  transform: rotate(6deg) translate(20vw, 44vh);
-  opacity: 0;
+@keyframes stripRip{
+  0% {
+    clip-path: inset(0 0 0 0);
+    transform: rotate(-5deg) translate(0, 0);
+    opacity: 1;
+  }
+  35% {
+    /* Jagged tear appears across the middle */
+    clip-path: polygon(
+      0 0, 100% 0, 100% 30%,
+      94% 55%, 88% 32%, 82% 60%, 76% 36%, 70% 58%, 64% 34%, 58% 56%, 52% 38%,
+      46% 60%, 40% 35%, 34% 58%, 28% 32%, 22% 60%, 16% 36%, 10% 58%, 4% 32%,
+      0 56%, 0 0
+    );
+    transform: rotate(-7deg) translate(-2vw, 2vh);
+    opacity: 1;
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    transform: rotate(-15deg) translate(-12vw, -28vh);
+    opacity: 0;
+  }
 }
 .hero__strip-track{
   display: inline-flex; align-items: center; gap: 22px; padding-inline: 22px;
@@ -1515,4 +1517,147 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ animation: none !important; transition: none !important; }
+}
+
+/* =========================================================
+   MOBILE OPTIMIZATION (≤ 760px)
+   Keeps the desktop visual language but shrinks/repositions
+   so each section feels "full-screen" on a phone.
+   ========================================================= */
+@media (max-width: 760px){
+  :root{
+    --container: 92vw;
+    --header-h: 60px;
+    --offset: 6px;
+  }
+
+  /* Header — only logo visible */
+  .hd{ padding: 0 16px; }
+  .hd__logo-img{ height: 26px; }
+
+  /* Hero — fill the screen vertically */
+  .hero{ min-height: 100svh; }
+  .hero__inner{ padding: 24px 0 36px; gap: 18px; }
+  .hero__deco{ display: none; } /* corner stars off on mobile */
+
+  /* Hero CTAs: stack 2 buttons + spinner on its own line */
+  .hero__cta{ flex-wrap: wrap; gap: 10px; align-items: center; }
+  .btn{ padding: 12px 18px; font-size: 12px; letter-spacing: .15em; }
+  .spinbtn{ width: 90px; height: 90px; margin-left: auto; }
+  .spinbtn__core{ font-size: 18px; }
+
+  /* Hero strip narrower */
+  .hero__strip{ height: 36px; top: 38%; }
+  .hero__strip-track{ font-size: 17px; gap: 14px; padding-inline: 14px; }
+  .hero__strip .ic{ width: 22px; height: 22px; }
+
+  /* Hero marquee */
+  .hero__marquee-track{ font-size: 18px; gap: 24px; }
+
+  /* TRAILER pill */
+  .hero__trailer{ top: 76px; padding: 7px 12px; font-size: 10px; gap: 6px; }
+  .hero__trailer-idx{ font-size: 9px; padding: 2px 6px; }
+  .hero__trailer-next{ width: 18px; height: 18px; font-size: 12px; }
+
+  /* Side text hidden on phones (already in earlier rule, reinforced) */
+  .hero__side{ display: none; }
+
+  /* Sections — bigger relative title, less padding */
+  .sec{ padding: 80px 0 90px; }
+  .sec__head{ grid-template-columns: 1fr; gap: 18px; padding-bottom: 28px; }
+  .sec__title--vert{
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: clamp(56px, 16vw, 100px);
+    border-bottom: 5px solid currentColor;
+    padding-bottom: .08em;
+    line-height: .9;
+  }
+  .sec__lead .lead__main{ font-size: clamp(15px, 4.4vw, 19px); }
+  .sec__lead .lead__sub{ font-size: 11px; }
+  .sec__lead .lead__kick{ font-size: 11px; }
+
+  /* Wavy ribbons shorter */
+  .ribbon{ height: 140px; margin: -30px 0 12px; }
+  .ribbon__path{ stroke-width: 50; }
+  .ribbon__txt{ font-size: 22px; }
+
+  /* "View all" buttons smaller */
+  .sec__more{
+    margin-top: 36px;
+    padding: 18px 36px;
+    font-size: 18px;
+    gap: 14px;
+  }
+  .sec__more i{ font-size: 22px; }
+
+  /* News grid — single column with bigger cards */
+  .news-grid{ gap: 28px 0; }
+  .news-card{ padding: 22px 22px 24px; }
+  .news-card__date{ font-size: 18px; }
+  .news-card__title{ font-size: 15px; }
+
+  /* Schedule search — vertical stack */
+  .sch-search{ padding: 16px 14px; border-radius: 22px; gap: 12px; }
+  .sch-search__top{ grid-template-columns: 1fr; gap: 12px; }
+  .sch-monthnav{ flex-wrap: wrap; }
+  .sch-monthnav button{ width: 34px; height: 34px; font-size: 18px; }
+  .sch-monthnav__cur{ font-size: 22px; padding: 0 8px; }
+  .sch-monthnav__cur .y{ font-size: 14px; }
+  .sch-search__view{ justify-self: stretch; width: 100%; justify-content: stretch; }
+  .sch-view{ flex: 1; padding: 8px 12px; }
+  .sch-keyword{ min-width: 0; width: 100%; padding: 7px 14px; }
+  .sch-keyword input{ font-size: 13px; }
+
+  .sch-tags__label, .sch-artist__label{ display: block; width: 100%; margin: 0 0 4px; }
+  .sch-tags__list{ width: 100%; }
+  .sch-tags__all, .sch-tags__none{ font-size: 9px; padding: 5px 8px; }
+  .sch-tags .tag-chip{ font-size: 10px; padding: 6px 9px; letter-spacing: .15em; }
+
+  .sch-artist{ flex-direction: column; align-items: stretch; gap: 6px; }
+  .sch-artist__menu{ min-width: 0; width: 100%; }
+
+  .sch-summary__count{ min-width: 30px; height: 30px; font-size: 14px; padding: 0 8px; }
+  .sch-summary__reset{ font-size: 10px; padding: 6px 10px; }
+
+  /* Schedule list items */
+  .sch-cal{ padding: 12px; border-radius: 18px; }
+  .sch-cal__day{ font-size: 11px; padding: 3px 2px; }
+  .sch-cal__dot{ width: 4px; height: 4px; }
+
+  /* Artist grid: 1-col with bigger cards (mobile feels like full-screen feature) */
+  .artist-grid{ grid-template-columns: 1fr; gap: 28px; }
+  .artist-card{ border-radius: 24px; }
+  .artist-card__media{ aspect-ratio: 16 / 11; }
+  .artist-card__name-jp{ font-size: 19px; }
+  .artist-card__name-en{ font-size: 14px; }
+  .artist-card__desc{ font-size: 13px; }
+
+  /* Company blob */
+  .company .blob{ padding: 32px 22px; border-radius: 28px; }
+
+  /* Footer */
+  .ft{ padding: 70px 0 40px; }
+  .ft__top{ padding-bottom: 40px; }
+  .ft__logo{ font-size: 28px; }
+  .ft__logo-img{ height: 32px; }
+  .ft__big{ font-size: clamp(60px, 22vw, 160px); margin: 50px 0 20px; }
+
+  /* Diagonal tape sections (between schedule/artist) — shorter */
+  .tapes{ height: 160px; }
+  .tape{ height: 56px; }
+  .tape__track{ font-size: 28px; gap: 18px; padding-inline: 18px; }
+  .tape__track .ic{ width: 30px; height: 30px; font-size: 15px; }
+}
+
+/* Very narrow phones (≤ 380px) — extra tighten */
+@media (max-width: 380px){
+  :root{ --container: 94vw; }
+  .hd__logo-img{ height: 22px; }
+  .hero__inner{ padding: 20px 0 28px; }
+  .btn{ padding: 11px 14px; font-size: 11px; }
+  .spinbtn{ width: 78px; height: 78px; }
+  .sec{ padding: 60px 0 70px; }
+  .sec__title--vert{ font-size: clamp(48px, 17vw, 80px); }
+  .news-card{ padding: 18px; }
 }
