@@ -11,10 +11,10 @@ window.DS_I18N = {
       marquee:"DEARSTAGE × IDOL × CULTURE × SINCE 2011 × "
     },
     sections: {
-      news: { ja:"ニュース", en:"News", lead:"DEARSTAGE 所属アーティストの最新情報。" },
-      schedule: { ja:"スケジュール", en:"Schedule", lead:"今日から先のライブ・イベント・出演予定。" },
-      artist: { ja:"アーティスト", en:"Artist", lead:"DEARSTAGE が誇るアーティストたち。" },
-      company: { ja:"会社情報", en:"Company", lead:"私たちのことについて。" }
+      news: { ja:"ニュース", en:"News", lead:"<span class='lead__kick'>● WHAT'S NEW</span><span class='lead__main'>DEARSTAGE 所属アーティストの<em>最新情報</em>を、ここから。</span><span class='lead__sub'>Latest updates from our artists.</span>" },
+      schedule: { ja:"スケジュール", en:"Schedule", lead:"<span class='lead__kick'>● UPCOMING SHOWS</span><span class='lead__main'>今日から先の<em>ライブ</em>・<em>イベント</em>・<em>出演予定</em>を、すべて。</span><span class='lead__sub'>Live shows, events, and appearances.</span>" },
+      artist: { ja:"アーティスト", en:"Artist", lead:"<span class='lead__kick'>● OUR ROSTER</span><span class='lead__main'>DEARSTAGE が誇る<em>15組</em>のアーティストたち。</span><span class='lead__sub'>Meet our 15 artist groups.</span>" },
+      company: { ja:"会社情報", en:"Company", lead:"<span class='lead__kick'>● ABOUT US</span><span class='lead__main'>私たちのことについて。<em>株式会社ディアステージ</em>。</span><span class='lead__sub'>About DEARSTAGE Inc.</span>" }
     },
     schedule: {
       filter_all:"すべて",
@@ -49,10 +49,10 @@ window.DS_I18N = {
       marquee:"DEARSTAGE × IDOL × CULTURE × SINCE 2011 × "
     },
     sections: {
-      news: { ja:"News", en:"News", lead:"Latest from DEARSTAGE artists." },
-      schedule: { ja:"Schedule", en:"Schedule", lead:"Upcoming lives, events and appearances." },
-      artist: { ja:"Artist", en:"Artist", lead:"Meet the DEARSTAGE artist roster." },
-      company: { ja:"Company", en:"Company", lead:"About us." }
+      news: { ja:"News", en:"News", lead:"<span class='lead__kick'>● WHAT'S NEW</span><span class='lead__main'><em>Latest</em> updates from DEARSTAGE artists.</span><span class='lead__sub'>所属アーティストの最新情報。</span>" },
+      schedule: { ja:"Schedule", en:"Schedule", lead:"<span class='lead__kick'>● UPCOMING SHOWS</span><span class='lead__main'><em>Live</em> shows, <em>events</em>, and <em>appearances</em> — from today onward.</span><span class='lead__sub'>今日から先のライブ・イベント・出演予定。</span>" },
+      artist: { ja:"Artist", en:"Artist", lead:"<span class='lead__kick'>● OUR ROSTER</span><span class='lead__main'>Meet the <em>15 groups</em> from DEARSTAGE.</span><span class='lead__sub'>DEARSTAGEが誇る15組のアーティスト。</span>" },
+      company: { ja:"Company", en:"Company", lead:"<span class='lead__kick'>● ABOUT US</span><span class='lead__main'>About <em>DEARSTAGE Inc.</em></span><span class='lead__sub'>株式会社ディアステージについて。</span>" }
     },
     schedule: {
       filter_all:"ALL",

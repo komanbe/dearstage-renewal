@@ -63,7 +63,13 @@
   function setupSplash(){
     const skip = $("#splashSkip");
     if (skip) skip.addEventListener("click", splashOut);
-    setTimeout(splashOut, 2800);
+    // primary timer (4s as requested)
+    setTimeout(splashOut, 4000);
+    // safety net: dismiss after 6s no matter what (in case primary timer was missed)
+    setTimeout(() => {
+      const sp = document.getElementById("splash");
+      if (sp && !sp.classList.contains("is-out")) splashOut();
+    }, 6000);
   }
 
   /* ---------- YouTube hero (with fallback) ---------- */
@@ -111,6 +117,29 @@
         if (!slot.querySelector("iframe")) slot.classList.add("is-failed");
       }, 5000);
     }
+  }
+
+  /* ---------- ribbon textPath flow ---------- */
+  function startRibbonFlow(){
+    const tps = document.querySelectorAll(".ribbon__txt textPath");
+    if (!tps.length) return;
+    const offsets = new Array(tps.length).fill(0);
+    let last = performance.now();
+    function tick(now){
+      const dt = Math.min((now - last) / 1000, .1);
+      last = now;
+      tps.forEach((tp, i) => {
+        // alternate direction per ribbon for visual variety
+        const dir = (i % 2 === 0) ? -1 : 1;
+        offsets[i] += dt * 28 * dir;
+        // Wrap so values stay bounded
+        if (offsets[i] >  3000) offsets[i] -= 3000;
+        if (offsets[i] < -3000) offsets[i] += 3000;
+        tp.setAttribute("startOffset", offsets[i]);
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
   }
 
   /* ---------- hero marquee + tape tracks ---------- */
@@ -683,6 +712,7 @@
     applyI18n();
     mountYouTube();
     buildMarquees();
+    startRibbonFlow();
     setupHeader();
     setupLang();
     renderAll();
