@@ -399,16 +399,23 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
   opacity: 0;
 }
 .hero__strip-track{
-  display: inline-flex; gap: 22px; padding-inline: 22px;
+  display: inline-flex; align-items: center; gap: 22px; padding-inline: 22px;
   white-space: nowrap;
   font-family: var(--f-disp); font-size: 24px; letter-spacing: .04em;
   animation: tapeScroll 26s linear infinite;
+  line-height: 1;
 }
+.hero__strip-track > span{ display: inline-flex; align-items: center; line-height: 1; }
 .hero__strip .ic{
   display: inline-flex; align-items: center; justify-content: center;
   width: 26px; height: 26px; border-radius: 50%;
   background: var(--c-ink); color: var(--c-pink);
-  font-size: 13px;
+  font-size: 13px; line-height: 1;
+  /* the ♪ glyph sits above the optical center in most fonts — nudge it back */
+  text-indent: 0;
+}
+.hero__strip .ic::before{
+  content: ""; display: block;
 }
 .hero__strip .out{ color: transparent; -webkit-text-stroke: 2px var(--c-ink); }
 @media (max-width: 760px){ .hero__strip{ height: 38px; top: 38%; } .hero__strip-track{ font-size: 18px; gap: 16px; } }
@@ -1443,14 +1450,20 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
    FLOATING LANG (mobile)
    ========================================================= */
 .float-lang{
-  position: fixed; right: 18px; bottom: 18px;
-  width: 70px; height: 70px; border-radius: 50%;
+  position: fixed; right: 22px; bottom: 22px;
+  width: 78px; height: 78px; border-radius: 50%;
   z-index: 99;
   background: var(--c-pink); color: var(--c-ink);
-  display: none;
+  display: inline-flex;
   align-items: center; justify-content: center;
-  box-shadow: 4px 4px 0 var(--c-ink);
+  box-shadow: 5px 5px 0 var(--c-ink);
   border: 2px solid var(--c-ink);
+  cursor: pointer;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.float-lang:hover{
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--c-ink);
 }
 .float-lang svg{
   position: absolute; inset: 0; width: 100%; height: 100%;
@@ -1459,10 +1472,14 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
   fill: var(--c-ink);
 }
 .float-lang__cur{
-  font-family: var(--f-disp); font-size: 18px; letter-spacing: .05em;
+  font-family: var(--f-disp); font-size: 20px; letter-spacing: .05em;
   position: relative; z-index: 1;
+  font-weight: 800;
 }
-@media (max-width: 900px){ .float-lang{ display: inline-flex; } }
+@media (max-width: 900px){
+  .float-lang{ width: 66px; height: 66px; right: 14px; bottom: 14px; box-shadow: 3px 3px 0 var(--c-ink); }
+  .float-lang__cur{ font-size: 17px; }
+}
 
 /* =========================================================
    Scroll reveal

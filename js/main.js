@@ -192,10 +192,20 @@
     // Hero diagonal strip
     const heroStrip = $("#heroStrip");
     if (heroStrip){
-      const items = ["Welcome to DEARSTAGE", "★", "Let's Check It Out", "♪", "Play List", "✺", "Idol × Culture", "★"];
-      heroStrip.innerHTML = items.map((s,i) => i%2===0
-        ? `<span class="${i%4===0 ? '' : 'out'}">${s}</span>`
-        : `<span class="ic">${s}</span>`
+      // Properly-centered SVG note icon (avoids ♪ glyph baseline drift)
+      const noteSVG = `<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+        <path fill="currentColor" d="M11 2.5v6.4a2.6 2.6 0 1 1-1.4-2.3V4.1l-4 1V11a2.6 2.6 0 1 1-1.4-2.3V3.4l6.8-1.8z"/>
+      </svg>`;
+      const starSVG = `<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M8 1l1.8 4.5L14.5 6l-3.5 3 1 4.7L8 11.3 4 13.7l1-4.7-3.5-3 4.7-.5z"/></svg>`;
+      const items = [
+        ["txt","Welcome to DEARSTAGE"], ["ic", starSVG],
+        ["out","Let's Check It Out"],   ["ic", noteSVG],
+        ["txt","Play List"],            ["ic", starSVG],
+        ["out","Idol × Culture"],       ["ic", noteSVG]
+      ];
+      heroStrip.innerHTML = items.map(([cls, body]) =>
+        cls === "ic" ? `<span class="ic">${body}</span>`
+                     : `<span class="${cls === "out" ? "out" : ""}">${body}</span>`
       ).join("").repeat(6);
     }
   }
